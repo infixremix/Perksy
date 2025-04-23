@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isBusiness() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.type == 'business';
+    }
+    
+    function isConsumer() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.type == 'consumer';
+    }
+
+    // Users collection rules
+    match /users/{userId} {
+      // Allow users to read their own data
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Allow businesses to read consumer documents
+      allow read: if isBusiness() && resource.data.type == 'consumer';
+      
+      // Allow consumers to read business documents
+      allow read: if isConsumer() && resource.data.type == 'business';
+      
+      // Allow users to create their own document
+      allow create: if isAuthenticated() && 
+        request.auth.uid == userId &&
+        request.resource.data.type in ['business', 'consumer'];
+      
+      // Allow users to update their own data
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Allow businesses to update consumer rewards
+      allow update: if isBusiness() && 
+        resource.data.type == 'consumer' &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['rewards', 'recentActivity']);
+    }
+  }
+} 

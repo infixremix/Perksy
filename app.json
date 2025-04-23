@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Perksy",
+    "slug": "perksy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.perksy.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need access to your camera to scan QR codes",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.perksy.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Perksy to access camera to scan QR codes."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e7a797f6-4042-4317-970a-b08e9d4e63db"
+      }
+    },
+    "scheme": "perksy"
+  }
+}
